@@ -34,7 +34,7 @@ class ElasticsearchConnector:
                     "normalized_url": {"type": "keyword"},
                     "canonical_domain": {"type": "keyword"},
                     "publication_date": {"type": "date"},
-                    "language": {"type": "keyword", "fielddata": True},
+                    "language": {"type": "text", "fielddata": True},
                     "full_language": {"type": "keyword"},
                     "text_extraction": {"type": "keyword"},
                     "article_title": {"type": "text", "fielddata": True},
