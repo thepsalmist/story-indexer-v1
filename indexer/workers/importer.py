@@ -25,10 +25,29 @@ class ElasticsearchConnector:
         ],
         index_name: str,
     ) -> None:
+        settings = {
+            "settings": {"number_of_shards": 1, "number_of_replicas": 0},
+            "mappings": {
+                "properties": {
+                    "original_url": {"type": "keyword"},
+                    "url": {"type": "keyword"},
+                    "normalized_url": {"type": "keyword"},
+                    "canonical_domain": {"type": "keyword"},
+                    "publication_date": {"type": "date"},
+                    "language": {"type": "keyword"},
+                    "full_language": {"type": "keyword"},
+                    "text_extraction": {"type": "keyword"},
+                    "article_title": {"type": "text", "fielddata": True},
+                    "normalized_article_title": {"type": "text", "fielddata": True},
+                    "text_content": {"type": "text"},
+                }
+            },
+        }
+
         self.client = Elasticsearch(hosts)
         self.index_name = index_name
         if self.client and self.index_name:
-            if not self.client.indices.exists(index=self.index_name):
+            if not self.client.indices.exists(index=self.index_name, body=settings):
                 self.client.indices.create(index=self.index_name)
 
     def index(self, document: Mapping[str, Any]) -> ObjectApiResponse[Any]:
